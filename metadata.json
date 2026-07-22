@@ -1,0 +1,6 @@
+{
+  "name": "Gemini AI Studio",
+  "description": "An interactive multimodal AI workspace for text generation, code assistance, image creation, speech synthesis, and prompt engineering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
