@@ -4,6 +4,7 @@ import {
   FlaskConical,
   Image as ImageIcon,
   Mic,
+  Video,
   BookMarked,
   Sliders,
   Globe,
@@ -64,6 +65,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           Chat
         </button>
         <button
+          onClick={() => setActiveTab('video')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${
+            activeTab === 'video' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 border border-slate-200'
+          }`}
+        >
+          <Video className="w-3.5 h-3.5" />
+          Vídeo
+        </button>
+        <button
           onClick={() => setActiveTab('playground')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${
             activeTab === 'playground' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 border border-slate-200'
@@ -110,6 +120,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>Chat Studio</span>
             </div>
             {activeTab === 'chat' && <ChevronRight className="w-3.5 h-3.5 text-indigo-500" />}
+          </button>
+
+          <button
+            onClick={() => setActiveTab('video')}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === 'video'
+                ? 'bg-purple-50 text-purple-700 border border-purple-200/60 shadow-xs'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Video className={`w-4 h-4 ${activeTab === 'video' ? 'text-purple-600' : 'text-slate-400'}`} />
+              <span>Video Chatbot (60s)</span>
+            </div>
+            {activeTab === 'video' && <ChevronRight className="w-3.5 h-3.5 text-purple-500" />}
           </button>
 
           <button

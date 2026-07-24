@@ -35,10 +35,12 @@ geminiRouter.post('/generate', async (req: Request, res: Response) => {
       searchGrounding = false,
       history = [],
       image,
+      video,
+      media,
     } = req.body;
 
-    if (!prompt && !image) {
-      res.status(400).json({ error: 'Prompt or image is required.' });
+    if (!prompt && !image && !video && !media) {
+      res.status(400).json({ error: 'Prompt, image, or video input is required.' });
       return;
     }
 
@@ -52,7 +54,7 @@ geminiRouter.post('/generate', async (req: Request, res: Response) => {
       for (const msg of history) {
         contents.push({
           role: msg.role === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.text }],
+          parts: [{ text: msg.text || msg.content }],
         });
       }
     }
@@ -64,6 +66,24 @@ geminiRouter.post('/generate', async (req: Request, res: Response) => {
         inlineData: {
           mimeType: image.mimeType,
           data: image.data,
+        },
+      });
+    }
+
+    if (video && video.data && video.mimeType) {
+      currentParts.push({
+        inlineData: {
+          mimeType: video.mimeType,
+          data: video.data,
+        },
+      });
+    }
+
+    if (media && media.data && media.mimeType) {
+      currentParts.push({
+        inlineData: {
+          mimeType: media.mimeType,
+          data: media.data,
         },
       });
     }

@@ -1,6 +1,16 @@
 export type AgentRole = 'architect' | 'executor' | 'sentinel_healer' | 'epistemic_sage' | 'skill_fuser';
 
-export type ActiveTab = 'overview' | 'skills-onboarding' | 'auto-healing' | 'wisdom-vault' | 'chaos-lab' | 'missions' | 'bridges';
+export type ActiveTab = 'chat' | 'playground' | 'visual' | 'speech' | 'saved' | 'video' | 'overview' | 'skills-onboarding' | 'auto-healing' | 'wisdom-vault' | 'chaos-lab' | 'missions' | 'bridges';
+
+export interface VideoMetadata {
+  fileName: string;
+  durationSeconds: number;
+  fileSizeMb: number;
+  mimeType: string;
+  previewUrl: string;
+  base64Data?: string;
+  recordedAt?: string;
+}
 
 export interface ChatMessage {
   id: string;
@@ -9,7 +19,9 @@ export interface ChatMessage {
   content?: string;
   text?: string;
   timestamp: string;
-  image?: string;
+  image?: string | { data: string; mimeType: string; previewUrl: string };
+  videoUrl?: string;
+  videoMetadata?: VideoMetadata;
   personaId?: string;
   groundingChunks?: any[];
   isError?: boolean;

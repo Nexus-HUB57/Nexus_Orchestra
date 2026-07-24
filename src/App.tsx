@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { ChatStudio } from './components/ChatStudio';
+import { VideoChatbot } from './components/VideoChatbot';
 import { CreativePlayground } from './components/CreativePlayground';
 import { VisualGenerator } from './components/VisualGenerator';
 import { SpeechSynthesis } from './components/SpeechSynthesis';
@@ -180,6 +181,10 @@ export default function App() {
               searchGrounding={searchGrounding}
               onSavePrompt={handleSavePromptToLibrary}
             />
+          )}
+
+          {activeTab === 'video' && (
+            <VideoChatbot temperature={temperature} topP={topP} />
           )}
 
           {activeTab === 'playground' && (

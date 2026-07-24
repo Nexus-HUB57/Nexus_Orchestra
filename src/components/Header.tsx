@@ -50,6 +50,16 @@ export const Header: React.FC<HeaderProps> = ({
           Chat Studio
         </button>
         <button
+          onClick={() => setActiveTab('video')}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
+            activeTab === 'video'
+              ? 'bg-white text-purple-600 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          Video Chat (60s)
+        </button>
+        <button
           onClick={() => setActiveTab('playground')}
           className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
             activeTab === 'playground'

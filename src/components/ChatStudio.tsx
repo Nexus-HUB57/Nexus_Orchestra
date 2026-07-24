@@ -283,7 +283,7 @@ export const ChatStudio: React.FC<ChatStudioProps> = ({
                 {msg.image && (
                   <div className="mb-3 overflow-hidden rounded-lg border border-white/20">
                     <img
-                      src={msg.image.previewUrl}
+                      src={typeof msg.image === 'string' ? msg.image : msg.image.previewUrl}
                       alt="Uploaded media"
                       className="max-h-60 w-auto object-cover rounded-lg"
                     />
