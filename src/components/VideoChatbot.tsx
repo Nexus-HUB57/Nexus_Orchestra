@@ -142,9 +142,19 @@ export const VideoChatbot: React.FC<VideoChatbotProps> = ({
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Memory leak cleanup for blob URLs
+  useEffect(() => {
+    return () => {
+      if (videoMeta?.previewUrl) {
+        URL.revokeObjectURL(videoMeta.previewUrl);
+      }
+    };
+  }, [videoMeta?.previewUrl]);
+
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
 
   // Handle Video File Selection
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

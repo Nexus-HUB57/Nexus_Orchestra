@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
-import { ChatStudio } from './components/ChatStudio';
-import { VideoChatbot } from './components/VideoChatbot';
-import { CreativePlayground } from './components/CreativePlayground';
-import { VisualGenerator } from './components/VisualGenerator';
-import { SpeechSynthesis } from './components/SpeechSynthesis';
-import { SavedPromptsModal } from './components/SavedPromptsModal';
-import { SettingsModal } from './components/SettingsModal';
 import { ActiveTab, ChatMessage, SavedPrompt, SystemPersona } from './types';
 import { SYSTEM_PERSONAS } from './data/presets';
+import { Loader2 } from 'lucide-react';
+
+// Lazy-loaded Studio View Components for optimal code splitting & initial load bundle reduction
+const ChatStudio = lazy(() => import('./components/ChatStudio').then((m) => ({ default: m.ChatStudio })));
+const VideoChatbot = lazy(() => import('./components/VideoChatbot').then((m) => ({ default: m.VideoChatbot })));
+const CreativePlayground = lazy(() => import('./components/CreativePlayground').then((m) => ({ default: m.CreativePlayground })));
+const VisualGenerator = lazy(() => import('./components/VisualGenerator').then((m) => ({ default: m.VisualGenerator })));
+const SpeechSynthesis = lazy(() => import('./components/SpeechSynthesis').then((m) => ({ default: m.SpeechSynthesis })));
+const SavedPromptsModal = lazy(() => import('./components/SavedPromptsModal').then((m) => ({ default: m.SavedPromptsModal })));
+const SettingsModal = lazy(() => import('./components/SettingsModal').then((m) => ({ default: m.SettingsModal })));
 
 const STORAGE_KEYS = {
   CHAT_MESSAGES: 'gemini_studio_chat_messages',
@@ -39,6 +42,13 @@ const DEFAULT_SAVED_PROMPTS: SavedPrompt[] = [
     createdAt: new Date().toLocaleDateString(),
   },
 ];
+
+const ComponentFallback = () => (
+  <div className="flex-1 flex flex-col items-center justify-center h-full bg-slate-50 text-slate-500 gap-3">
+    <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+    <span className="text-xs font-semibold tracking-wide text-slate-600">Carregando Módulo Nexus Studio...</span>
+  </div>
+);
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('chat');
@@ -120,9 +130,8 @@ export default function App() {
     setIsSavedPromptsOpen(true);
   };
 
-  const handleUsePromptFromLibrary = (promptText: string) => {
+  const handleUsePromptFromLibrary = (_promptText: string) => {
     setActiveTab('chat');
-    // Inject into chat input or handle directly
   };
 
   const handleResetSessionData = () => {
@@ -169,55 +178,64 @@ export default function App() {
           setSearchGrounding={setSearchGrounding}
         />
 
-        {/* Dynamic Studio Tab Content */}
+        {/* Dynamic Studio Tab Content with Suspense */}
         <main className="flex-1 flex flex-col h-full overflow-hidden">
-          {activeTab === 'chat' && (
-            <ChatStudio
-              messages={messages}
-              setMessages={setMessages}
-              selectedPersona={selectedPersona}
-              temperature={temperature}
-              topP={topP}
-              searchGrounding={searchGrounding}
-              onSavePrompt={handleSavePromptToLibrary}
-            />
-          )}
+          <Suspense fallback={<ComponentFallback />}>
+            {activeTab === 'chat' && (
+              <ChatStudio
+                messages={messages}
+                setMessages={setMessages}
+                selectedPersona={selectedPersona}
+                temperature={temperature}
+                topP={topP}
+                searchGrounding={searchGrounding}
+                onSavePrompt={handleSavePromptToLibrary}
+              />
+            )}
 
-          {activeTab === 'video' && (
-            <VideoChatbot temperature={temperature} topP={topP} />
-          )}
+            {activeTab === 'video' && (
+              <VideoChatbot temperature={temperature} topP={topP} />
+            )}
 
-          {activeTab === 'playground' && (
-            <CreativePlayground
-              temperature={temperature}
-              topP={topP}
-              searchGrounding={searchGrounding}
-              onSavePrompt={handleSavePromptToLibrary}
-            />
-          )}
+            {activeTab === 'playground' && (
+              <CreativePlayground
+                temperature={temperature}
+                topP={topP}
+                searchGrounding={searchGrounding}
+                onSavePrompt={handleSavePromptToLibrary}
+              />
+            )}
 
-          {activeTab === 'visual' && <VisualGenerator />}
+            {activeTab === 'visual' && <VisualGenerator />}
 
-          {activeTab === 'speech' && <SpeechSynthesis />}
+            {activeTab === 'speech' && <SpeechSynthesis />}
+          </Suspense>
         </main>
       </div>
 
-      {/* Modals */}
-      <SavedPromptsModal
-        isOpen={isSavedPromptsOpen}
-        onClose={() => setIsSavedPromptsOpen(false)}
-        savedPrompts={savedPrompts}
-        setSavedPrompts={setSavedPrompts}
-        onUsePrompt={handleUsePromptFromLibrary}
-      />
+      {/* Modals with Suspense */}
+      <Suspense fallback={null}>
+        {isSavedPromptsOpen && (
+          <SavedPromptsModal
+            isOpen={isSavedPromptsOpen}
+            onClose={() => setIsSavedPromptsOpen(false)}
+            savedPrompts={savedPrompts}
+            setSavedPrompts={setSavedPrompts}
+            onUsePrompt={handleUsePromptFromLibrary}
+          />
+        )}
 
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        isApiConfigured={isApiConfigured}
-        checkStatus={checkApiStatus}
-        onResetData={handleResetSessionData}
-      />
+        {isSettingsOpen && (
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            isApiConfigured={isApiConfigured}
+            checkStatus={checkApiStatus}
+            onResetData={handleResetSessionData}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
+
