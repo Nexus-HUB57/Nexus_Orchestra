@@ -125,7 +125,13 @@ A aplicação React oferece um estúdio completo e responsivo:
 - Conversão de texto em áudio neural com `gemini-3.1-flash-tts-preview`.
 - Múltiplas vozes neurais (*Kore*, *Puck*, *Fenrir*, *Zephyr*, *Charon*).
 
-### 5. 🛠️ Consoles Agenticos & Ferramentas de Produção
+### 5. 🎬 Video Chatbot (Até 60s)
+- Análise multimodal completa de vídeos de até 60 segundos via **Gemini 3.6 Flash**.
+- **Upload e Gravação via Webcam**: Suporte para drag & drop de arquivos MP4/WebM ou gravação direta pela câmera.
+- **Prompts Prontos**: Resumo de Cenas, Linha do Tempo & Timestamps, Transcrição de Fala e Legendas Virais para Reels/TikTok.
+- **Análise Temporal e de Áudio**: Processamento unificado de frames visuais e trilha de áudio.
+
+### 6. 🛠️ Consoles Agenticos & Ferramentas de Produção
 - **Agent Swarm View**: Visualização da enxame e interações entre agentes.
 - **Auto-Healing Console**: Monitoramento de saúde, logs de diagnósticos e botão de acionamento de autocura.
 - **Wisdom Vault View**: Inspeção e busca semântica nas notas do Obsidian Vault.
@@ -168,6 +174,7 @@ nexus-orchestra/
     │   ├── SpeechSynthesis.tsx         # Síntese de fala TTS
     │   ├── StressTestConsole.tsx       # Teste de carga
     │   ├── TelemetryCharts.tsx         # Gráficos de telemetria
+    │   ├── VideoChatbot.tsx            # Chatbot para vídeos até 60s
     │   ├── VisualGenerator.tsx         # Geração de imagem
     │   └── WisdomVaultView.tsx         # Leitor/Buscador Obsidian Vault
     ├── data/
